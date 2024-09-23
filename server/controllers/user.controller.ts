@@ -8,7 +8,6 @@ import ejs from "ejs";
 import path from "path";
 import sendMail from "../utlis/sendMail";
 
-
 //regidter user
 interface IRegistrationBody{
     name: string,

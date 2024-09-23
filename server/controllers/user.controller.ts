@@ -4,6 +4,9 @@ import userModel,{IUser} from "../models/user.model";
 import ErrorHandeler from "../utlis/ErrorHandeler";
 import { CatchAsyncErrors } from "../middleware/catchAsyncErrors";
 import jwt, { Secret } from "jsonwebtoken";
+import ejs from "ejs";
+import path from "path";
+import sendMail from "../utlis/sendMail";
 
 
 //regidter user
@@ -31,6 +34,26 @@ export const registrationUser = CatchAsyncErrors(async(req:Request,res:Response,
         }
 
         const activationToken = createActivationToken(user);
+        const activationCode = activationToken.activationCode;
+        const data = {user: {name:user.name},activationCode};
+        const html = await ejs.renderFile(path.join(__dirname,"../mails/activation-mail.ejs"),data);
+
+        try {
+            await sendMail({
+                email:user.email,
+                subject:"Activation Code",
+                template:"activation-mail.ejs",
+                data
+            });
+            res.status(201).json({
+                sucess:true,
+                message: `Please check your email: ${user.email} to activate your accunt!`,
+                activationToken:activationToken.token,
+            })
+        } catch (error:any) {
+            return next(new ErrorHandeler(error.message,400))
+        }
+
         
     } catch (error:any) {
         return next(new ErrorHandeler(error.message,400));
@@ -42,6 +65,7 @@ interface IActivationToken{
     activationCode:string;
 }
 
+//generate a activetion code for the user(otp)
 export const createActivationToken = (user:any): IActivationToken =>{
     const activationCode = Math.floor(1000+Math.random()*9000).toString();
 

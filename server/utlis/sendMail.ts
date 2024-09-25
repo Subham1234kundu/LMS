@@ -9,7 +9,6 @@ interface EmailOpctions{
     template:string;
     data:{[key:string]:any};
 }
-
 const sendMail = async (opctions:EmailOpctions):Promise <void> => {
     const transporter: Transporter = nodemailer.createTransport({
         host:process.env.SMTP_HOST,
@@ -37,7 +36,5 @@ const sendMail = async (opctions:EmailOpctions):Promise <void> => {
     };
 
     await transporter.sendMail(mailOpctions);
-
 };
-
 export default sendMail

@@ -38,7 +38,7 @@ const userSchema: Schema <IUser> = new Schema({
     },
     password:{
         type:String,
-        required:[true,"Please enter your password"],
+        
         minlength: [6,"Password must be at least 6 characters"],
         select:false
     },
@@ -72,14 +72,14 @@ userSchema.pre<IUser>('save',async function name(next) {
 });
 
 
-//Sign acess token
-userSchema.methods.signAcessToken = async function(){
-    return jwt.sign({id: this._id}, process.env.ACESS_TOKEN || "")
+//Sign acc ess token
+userSchema.methods.signAcessToken =  function(){
+    return jwt.sign({id: this._id}, process.env.ACESS_TOKEN || "",{expiresIn:"5m"})
 }
 
 //Sign Refresh token
-userSchema.methods.signRefreshToken = async function(){
-    return jwt.sign({id: this._id},process.env.REFRESH_TOKEN || "")
+userSchema.methods.signRefreshToken = function(){
+    return jwt.sign({id: this._id},process.env.REFRESH_TOKEN || "",{expiresIn:"7d"})
 }
 
 //compare password 

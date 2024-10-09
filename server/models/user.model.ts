@@ -89,3 +89,10 @@ userSchema.methods.comparePassword = async function (enterPassword: string): Pro
 
 const userModel: Model<IUser> = mongoose.model("User",userSchema);
 export default userModel;
+
+
+//update user info
+interface IUpdateUserIndo {
+    name?: string;
+    email?: string;
+}

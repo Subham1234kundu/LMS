@@ -26,6 +26,7 @@ interface ICourseData extends Document{
     videoThumbnail: object;
     videoLength: number;
     videoPlayer:string;
+    videoSection:string,
     links:ILink[];
     suggestion: string;
     questions: IComment[];
@@ -71,7 +72,9 @@ const commentSchema = new Schema<IComment>({
 const couseDataSchema = new Schema<ICourseData>({
     videoUrl: String,
     title:String,
+    description:String,
     videoLength: Number,
+    videoSection:String,
     videoPlayer: String,
     links:[linkSchema],
     suggestion:String,

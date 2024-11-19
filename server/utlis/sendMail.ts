@@ -35,6 +35,11 @@ const sendMail = async (opctions:EmailOpctions):Promise <void> => {
         html
     };
 
+    try{
     await transporter.sendMail(mailOpctions);
+    } catch (error) {
+        console.error("Error sending email:", error);
+        throw new Error("Failed to send email");
+    }
 };
 export default sendMail

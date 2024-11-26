@@ -9,7 +9,7 @@ import path from "path";
 import sendMail from "../utlis/sendMail";
 import { acessTokenOpctions, refreshTokenOpctions, sendToken } from "../utlis/jwt";
 import { redis } from "../utlis/redis";
-import { getUserById } from "../services/user.service";
+import { getAllUsersServices, getUserById, updateUserRoleServices } from "../services/user.service";
 import cloudinary from "cloudinary"
 
 
@@ -419,7 +419,27 @@ export const updateProfilePicture = CatchAsyncErrors(async(req:Request,res:Respo
         return next(new ErrorHandeler(error.message, 400));
     }
     
-})
+});
+
+//get all users --- only for Admin 
+export const getAllUsers = CatchAsyncErrors( async(req:Request, res:Response, next:NextFunction)=>{
+    try {
+        getAllUsersServices(res);
+    }catch (error:any) {
+        return next(new ErrorHandeler(error.message, 400));
+    }
+});
+
+//update user role -- only for admin
+export const updateUserRole = CatchAsyncErrors(async(req:Request, res:Response, next:NextFunction)=>{
+    try {
+        const{id,role} = req.body;
+      updateUserRoleServices(res,id,role);
+    }catch (error:any) {
+        return next(new ErrorHandeler(error.message, 400));
+    };
+});
+
 
 
 

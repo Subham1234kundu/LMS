@@ -8,7 +8,7 @@ import path from "path";
 import ejs from "ejs";
 import sendMail from "../utlis/sendMail";
 import NotificationModel from "../models/notification.model";
-import { newOrder } from "../services/order.service";
+import { newOrder, getAllOdersServices } from "../services/order.service";
 
 
 //create Order
@@ -84,4 +84,14 @@ export const createOrder = CatchAsyncErrors(async (req: Request, res: Response, 
     }catch (error: any) {
         return next(new ErrorHandeler(error.message, 500));
     }
-})
+});
+
+
+//get all orders --- only for Admin 
+export const getAllOrders = CatchAsyncErrors( async(req:Request, res:Response, next:NextFunction)=>{
+    try {
+        getAllOdersServices(res);
+    }catch (error:any) {
+        return next(new ErrorHandeler(error.message, 400));
+    }
+});

@@ -95,7 +95,8 @@ export const getSingleCourse = CatchAsyncErrors(async (req: Request, res: Respon
         //to protect our video data , link and hide them.
         const course = await CourseModel.findById(req.params.id).select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links ");
 
-        await redis.set(courseId, JSON.stringify(course));
+        //if the course is not visiting in 7 days then remove the data from redis db
+        await redis.set(courseId, JSON.stringify(course),"EX",604800);
         
         res.status(200).json({
             success: true,

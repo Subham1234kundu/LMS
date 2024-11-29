@@ -205,7 +205,7 @@ export const updateAccessToken = CatchAsyncErrors(async(req:Request,res:Response
         //Retrieves the session data associated with the user’s ID from Redis database
         const session = await redis.get(decoded.id as string);
         if(!session){
-            return next(new ErrorHandeler(message,400));
+            return next(new ErrorHandeler("please loging for access this resources",400));
         }
 
         //convert the data as a string
@@ -221,6 +221,9 @@ export const updateAccessToken = CatchAsyncErrors(async(req:Request,res:Response
         //setting tokens to the cookies
         res.cookie("acess_token",acessToken,acessTokenOpctions);
         res.cookie("refresh_token",refreshToken,refreshTokenOpctions);
+
+        //if the user not login for 7 days then remove the data from redis . and user logut automatically .
+        await redis.set(user._id,JSON.stringify(user),"EX",604800);//7days
 
         res.status(200).json({
             status:"sucess",
